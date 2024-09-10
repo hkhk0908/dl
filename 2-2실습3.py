@@ -15,7 +15,7 @@ class Layer_Dense:
 
     def forward(self, inputs):
         output = np.dot(inputs, self.weights) + self.biases
-        return np.maximum(0, output)  # ReLU 함수 적용
+        return np.maximum(0, output)
 
 X, y = spiral_data(200, 3)
 
