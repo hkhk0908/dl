@@ -1,4 +1,7 @@
 import numpy as np
+import nnfs
+from nnfs.datasets import spiral_data
+
 
 class Layer_Dense:
 
@@ -27,7 +30,7 @@ class Layer_Dense:
              dvalues:앞선 미분값
         '''
         self.dweights = np.dot(self.weights.T,dvalues)
-        self.dbiases = np.sum(dvalues, axis=0,keepdims=true)
+        self.dbiases = np.sum(dvalues, axis=0,keepdims=True)
         self.dinputs = np.dot(dvalues,self.weights.T)
 
 class Activation_ReLU:
@@ -36,7 +39,7 @@ class Activation_ReLU:
         self.inputs = inputs
         self.output = np.maximum(0,inputs)
 
-    def backward(self,dvalues)
+    def backward(self,dvalues):
         self.dinputs = dvalues.copy()
         self.dinputs[self.inputs <= 0] = 0
 
@@ -57,12 +60,12 @@ class Activation_Softmax:
         Args
             dvalues: 이전의 미분값
         '''
-        self.dinputs = np.empty_like(dalues)
+        self.dinputs = np.empty_like(dvalues)
         for index, (single_output, single_dvalues) in enumerate(zip(self.output,dvalues)):
             single_output = single_output.reshape(-1,1)
             jacobian_matrix = np.diagflat(single_output) - np.dot(single_output, single_output.T)
             self.dinputs[index] = np.dot(jacobian_matrix, single_dvalues)
-class Loss
+class Loss:
     def calculate(self,output,y):
         sample_losses = self.forward(output,y)
         data_loss = np.mean(sample_losses)
@@ -106,7 +109,7 @@ class Activation_Softmax_Loss_CategoricalCrossentropy():
     def backward(self, dvalues, y_true):
         samples = len(dvalues)
 
-        if len(y_true.shape) == 2
+        if len(y_true.shape) == 2:
             y_true = np.argmax(y_true, axis=1)
 
         self.dinputs = dvalues.copy()
